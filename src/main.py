@@ -30,9 +30,9 @@ async def on_ready() -> None:
 async def on_guild_join(guild: discord.Guild) -> None:
     await guild.owner.send("# Thanks for adding the TransforMate bot to your server!\n"
                            "By having the bot on your server, you agree to our [Terms of Service]"
-                           "(https://dorythecat.github.io/TransforMate/legal/tos), "
+                           "(https://pishock-inc.github.io/TransforMate/legal/tos), "
                            "and to our [Privacy Policy]"
-                           "(https://dorythecat.github.io/TransforMate/legal/privacy_policy).\n"
+                           "(https://pishock-inc.github.io/TransforMate/legal/privacy_policy).\n"
                            "Check them anytime with the /legal command\n\n"
                            "We hope you enjoy this bot and all of its functions, and remember to always use it "
                            "with respect and consent from other users, and never for nefarious purposes!")
@@ -396,18 +396,17 @@ async def info(ctx: discord.ApplicationContext) -> None:
     embed = utils.get_embed_base("Info", "> \"Let's get transforming!\"")
     embed.add_field(name="Original Creators", value="<@770662556456976415>\n<@250982256976330754>")
     embed.add_field(name="Logo by", value="<@317115440180494337>")
-    embed.add_field(name="Source Code", value="[GitHub](https://github.com/dorythecat/transformate)")
-    embed.add_field(name="Official Documentation", value="https://dorythecat.github.io/TransforMate/")
+    embed.add_field(name="Source Code", value="[GitHub](https://github.com/PiShock-Inc/transformate)")
+    embed.add_field(name="Official Documentation", value="[Documentation](https://pishock-inc.github.io/TransforMate/)")
     embed.add_field(name="Official Discord Server", value="[Join here!](https://discord.gg/uGjWk2SRf6)")
-    embed.add_field(name="Support the project!", value="[Patreon](https://www.patreon.com/dorythecat) | "
-                                                       "[Official Shop](https://shop.transformate.live/)")
+    embed.add_field(name="Support the project!", value="[Patreon](https://www.patreon.com/dorythecat)")
     await ctx.respond(embed=embed)
 
 @bot.slash_command(description="Legal stuff, so fun!")
 async def legal(ctx: discord.ApplicationContext) -> None:
     desc = "By using this bot you agree to our "
-    desc += "[Terms of Service](https://dorythecat.github.io/TransforMate/legal/tos) and our "
-    desc += "[Privacy Policy](https://dorythecat.github.io/TransforMate/legal/privacy_policy)"
+    desc += "[Terms of Service](https://pishock-inc.github.io/TransforMate/legal/tos) and our "
+    desc += "[Privacy Policy](https://pishock-inc.github.io/TransforMate/legal/privacy_policy)"
     await ctx.respond(embed=utils.get_embed_base(title="Legal Stuff",desc=desc))
 
 @bot.slash_command(description="Invite the bot to your server")
