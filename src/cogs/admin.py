@@ -24,7 +24,24 @@ class Admin(commands.Cog):
     @discord.default_permissions(administrator=True)
     async def block_channel(self,
                             ctx: discord.ApplicationContext,
-                            channel: discord.Option(discord.TextChannel) = None) -> None:
+                            channel: discord.Option(discord.TextChannel) = None,
+                            invert: discord.Option(bool,
+                                                   "Inverts the current blocked status of ALL channels") = False,
+                            all_channels: discord.Option(bool,
+                                                         "Blocks All channels on this server (does not unblock any channels)") = False) -> None:
+        if all_channels:
+            data = utils.load_transformed(ctx.guild)
+            blocked_channels = [ctx.guild.get_channel(int(channel)).mention for channel in data['blocked_channels']]
+            for channel in ctx.guild.text_channels:
+                if channel.id not in blocked_channels:
+                    utils.write_transformed(ctx.guild, block_channel=channel)
+            await ctx.respond("Blocked all channels on this server!")
+            return
+        if invert:
+            for channel in ctx.guild.text_channels:
+                utils.write_transformed(ctx.guild, block_channel=channel)
+            await ctx.respond("Inverted your blocked channels!")
+            return
         if channel is None:
             channel = ctx.channel
         utils.write_transformed(ctx.guild, block_channel=channel)

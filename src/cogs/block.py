@@ -19,7 +19,7 @@ class Block(commands.Cog):
                                              ) = False,
                       all_channels: discord.Option(bool,
                                                    "Blocks all channels on this server" +
-                                                   "(does not unvblock any channels)") = False) -> None:
+                                                   "(does not unblock any channels)") = False) -> None:
         if all_channels:
             blocked_channels = utils.load_tf(ctx.user, ctx.guild)['blocked_channels']
             for channel in ctx.guild.text_channels:
@@ -48,7 +48,7 @@ class Block(commands.Cog):
                                           ) = False,
                    all_users: discord.Option(bool,
                                                 "Blocks all users on this server" +
-                                                "(does not unvblock any users)") = False) -> None:
+                                                "(does not unblock any users)") = False) -> None:
         if all_users:
             blocked_users = utils.load_tf(ctx.user, ctx.guild)['blocked_users']
             for member in ctx.guild.members:
