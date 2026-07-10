@@ -58,11 +58,7 @@ async def transform_function(ctx: discord.ApplicationContext,
         # Defaults to their avatar, or, if they lack one, to the default Discord avatar
         image_url = user.avatar.url if user.avatar is not None else "https://cdn.discordapp.com/embed/avatars/1.png"
 
-    utils.write_tf(user,
-                   ctx.guild,
-                   transformed_by=ctx.author,
-                   into=into.strip(),
-                   image_url=image_url)
+    utils.write_tf(user, ctx.guild, transformed_by=ctx.author, into=into.strip(), image_url=image_url)
     utils.write_transformed(ctx.guild, user)
 
     transformed_data = utils.load_transformed(ctx.guild)
@@ -184,11 +180,7 @@ class Transformation(commands.Cog):
         if response.content.lower().strip() == "cancel":
             await ctx.respond("Cancelled the transformation!")
             return
-        if await transform_function(ctx,
-                                    user,
-                                    response.content,
-                                    file_url,
-                                    None):
+        if await transform_function(ctx, user, response.content, file_url, None):
             if change_nickname:
                 try:
                     await user.edit(nick=into)
@@ -246,7 +238,7 @@ class Transformation(commands.Cog):
 
         transformed_data = utils.load_transformed(ctx.guild)
         if transformed_data['logs'][2]:
-            embed = utils.get_embed_base(title="Transformed User", color=discord.Color.green())
+            embed = utils.get_embed_base(titls -l /dev/ttyACM0le="Transformed User", color=discord.Color.green())
             embed.add_field(name="User", value=user.mention)
             embed.add_field(name="Transformed By", value=ctx.author.mention)
             embed.add_field(name="Into", value="Their normal self")

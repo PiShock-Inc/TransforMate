@@ -150,8 +150,7 @@ class Set(commands.Cog):
         utils.write_tf(user, ctx.guild, sprinkle=sprinkle, chance=chance)
         await ctx.respond(f"{user.mention} will now have the word \"{sprinkle}\" sprinkled in their messages!")
 
-    @set_command.command(description="Set the transformed user to have their words/messages randomly replaced with a "
-                                     "specific set of words")
+    @set_command.command(description="Set the transformed user to have their words/messages randomly replaced with a specific set of words")
     async def muffle(self,
                      ctx: discord.ApplicationContext,
                      muffle: discord.Option(discord.SlashCommandOptionType.string,
@@ -207,6 +206,7 @@ class Set(commands.Cog):
         except Exception:
             await ctx.respond("Could not change nickname of user! Please check the permissions of the bot!",
                               ephemeral=True)
+            return
         await ctx.respond(f"{user.mention}'s nickname has been set to their transformed name!")
 
 
