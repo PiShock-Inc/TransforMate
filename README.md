@@ -44,7 +44,7 @@ look no further! With TransforMate, this task is made much simpler!
 - And more fun stuff!!!
 
 ## Inviting TransforMate
-To invite TransforMate to your server, you can use [this link](https://discord.com/oauth2/authorize?client_id=1274436972621987881).
+To invite TransforMate to your server, you can use [this link](https://discord.com/oauth2/authorize?client_id=1522230400959643688&permissions=4504029862685760&integration_type=0&scope=bot).
 You can either use it as is, or, if you have any security concerns with giving the bot the Administrator permission, you
 can also disable it and just keep the other permissions active, though this may need additional setup, and may be prone
 to unusual behaviours.
