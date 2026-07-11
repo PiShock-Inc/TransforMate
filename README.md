@@ -1,5 +1,5 @@
-![GitHub last commit](https://img.shields.io/github/last-commit/dorythecat/TransforMate)
-[![CodeQL](https://github.com/dorythecat/TransforMate/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/dorythecat/TransforMate/actions/workflows/github-code-scanning/codeql)
+![GitHub last commit](https://img.shields.io/github/last-commit/PiShock-Inc/TransforMate)
+[![CodeQL](https://github.com/PiShock-Inc/TransforMate/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/dorythecat/TransforMate/actions/workflows/github-code-scanning/codeql)
 
 # TransforMate
 > A bot to Transform your Mates
@@ -19,6 +19,8 @@ look no further! With TransforMate, this task is made much simpler!
 - Friendly, helpful, and active community
 - Free to use
 - No ads, no tracking, no selling of data
+- Cohesive, easily understandable documentation, with tutorials
+- [Free webpage to generate your own TSF files with more control](https://www.transformate.live/tsf_editor.html)
 
 ### For server staff:
 - Little to none setup and configuration
@@ -26,6 +28,8 @@ look no further! With TransforMate, this task is made much simpler!
 - Block users from using the bot, on a per-user or per-server basis
 - Global ban system that helps you keep your server safe from known bad actors
 - A big (and growing) community for support
+- Easy to use documentation with tutorials
+- Avoid cluttering your logs if you're using Dyno
 
 ### For developers:
 - Open-source, with a permissive license
@@ -33,15 +37,12 @@ look no further! With TransforMate, this task is made much simpler!
 - Easy to contribute to, with a friendly and welcoming community
 - Active development and support
 - Fully open source data formats
+- Fully documented expected behaviours
 
 ## Upcoming Features
-- Avoid logging deleted messages in most popular log bots
 - More customization options, both for users AND server staff
-- ~~Webpage and web interface~~
-- ~~Even better documentation~~
-- Optimised file structure
 - Plugins and custom scripting language
-- And more fun stuff!!!
+- And much more fun stuff!!!
 
 ## Inviting TransforMate
 To invite TransforMate to your server, you can use [this link](https://discord.com/oauth2/authorize?client_id=1522230400959643688&permissions=4504029862685760&integration_type=0&scope=bot).
@@ -50,8 +51,8 @@ can also disable it and just keep the other permissions active, though this may 
 to unusual behaviours.
 
 By adding TransforMate to your server, you agree to our
-[Terms of Service](http://docs.transformate.live/legal/tos/), and to our
-[Privacy Policy](http://docs.transformate.live/legal/privacy_policy/).
+[Terms of Service](https://pishock-inc.github.io/TransforMate/legal/tos/), and to our
+[Privacy Policy](https://pishock-inc.github.io/TransforMate/legal/privacy_policy/).
 
 ## Hosting TransforMate
 To host your own TransforMate instance, you'll just need to clone this repo,
@@ -75,12 +76,6 @@ cache directory and a `people` directory inside it, with, for example,
 
 For more information or help, don't hesitate to ask in our Discord server!
 
-### Secret Key
-The Secret Key is required to encode user passwords using passlib. You can leave
-this field empty if you aren't going to use the API features. Otherwise, to
-populate it, run the command `openssl rand -hex 32` in your terminal to get a
-randomly generated secret key. Do not share this key with anyone.
-
 ## Collaborating with the project
 If you've had a cool idea, found a bug, or wanted to add some of your own code, 
 feel free to open an issue or to do a pull request! You can also contact us in
@@ -90,6 +85,3 @@ our Discord server, where we have channels and forums specifically for this stuf
 [Discord Server](https://discord.gg/uGjWk2SRf6)
 
 Inspired by the awesome BPTBot, made by Leroco.
-
-# Demo video for some reason
-https://github.com/user-attachments/assets/0d5774f6-585f-42aa-9784-495798326119
