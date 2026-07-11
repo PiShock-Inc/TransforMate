@@ -412,7 +412,7 @@ async def legal(ctx: discord.ApplicationContext) -> None:
 @bot.slash_command(description="Invite the bot to your server")
 async def invite(ctx: discord.ApplicationContext) -> None:
     await ctx.respond("To invite the bot to a server you own, use "
-                      "[this link](https://discord.com/oauth2/authorize?client_id=1274436972621987881)!\n\n"
+                      "[this link](https://discord.com/oauth2/authorize?client_id=1522230400959643688&permissions=4504029862685760&integration_type=0&scope=bot)!\n\n"
                       "Feel free to share it around with anyone! <3")
 
 
