@@ -1,4 +1,5 @@
 ## Staging (Transformate Alpha)
+- Implemented [#97](https://github.com/PiShock-Inc/TransforMate/issues/97).
 - Fixed[#84](https://github.com/PiShock-Inc/TransforMate/issues/84).
 
 ## v2.5.0 (CountingWithValve)

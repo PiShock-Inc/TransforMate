@@ -240,19 +240,17 @@ async def on_reaction_add(reaction: discord.Reaction, user: discord.User) -> Non
                                                       discord.ChannelType.public_thread]
         channel = reaction.message.channel.parent if is_thread else reaction.message.channel
 
-        webhook = await utils.get_webhook_by_name(channel, reaction.message.author.name, m.author.id)
+        webhook = await utils.get_webhook_by_name(channel, reaction.message.author.name, tfee)
 
         attachments = []
         for attachment in response.attachments:
             attachment_file = await attachment.to_file()
             attachments.append(attachment_file)
 
-        await webhook.send(response.content,
-                           username=reaction.message.author.name,
-                           avatar_url=reaction.message.author.display_avatar.url,
-                           files=attachments,
-                           thread=reaction.message.channel if is_thread else discord.utils.MISSING)
-        await reaction.message.delete()
+        await webhook.edit_message(message_id=reaction.message.id,
+                                   content=response.content,
+                                   files=attachments,
+                                   thread=reaction.message.channel if is_thread else discord.utils.MISSING)
         await user.send("Message edited successfully!")
 
         transformed_data = utils.load_transformed(reaction.message.guild)
