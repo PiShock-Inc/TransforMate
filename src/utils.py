@@ -688,13 +688,14 @@ def get_embed_base(title: str,
     )
 
 
-async def check_message(message: discord.Message) -> tuple[int | None, dict | None]:
+async def check_message(message: discord.Message, load_data: bool = True) -> tuple[int | None, dict | None]:
     """
     Gets the tfed user and the data of said user from a message sent by the bot, if possible.
 
-    :param message: The message to extract the data from.
+    :param message: The message to check.
+    :param load_data: WEther or not to load the data of the user.
 
-    :return: A tuple containing, in this order, the user ID, and the TMUD data of the TF, or both parameters set to None if the fetching failed.
+    :return: A tuple containing, in this order, the user ID, and the TMUD data of the TF, or both parameters set to None if the fetching failed. The TMUD data will be set to None if load_data = False.
     """
     wh_id = message.webhook_id
     if wh_id is None:
@@ -706,7 +707,7 @@ async def check_message(message: discord.Message) -> tuple[int | None, dict | No
     if wh_name is None or wh_name.strip() == "":
         return None, None
     user_id = int(wh_name.strip().split("_")[0])
-    return user_id, load_tf(user_id, message.guild)
+    return user_id, load_tf(user_id, message.guild) if load_data else None
 
 # TSF Utilities
 # See https://dorythecat.github.io/TransforMate/commands/transformation/export_tf/#transformation-string-format

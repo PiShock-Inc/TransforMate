@@ -147,7 +147,7 @@ async def on_message(message: discord.Message) -> None:
     if message.reference:  # Check if the message is a reply
         mention = f"***{message.reference.resolved.author.mention}***"
         if message.reference.resolved.webhook_id and not message.reference.resolved.author == bot.user:
-            tfee, _ = await utils.check_message(message.reference.resolved)
+            tfee, _ = await utils.check_message(message.reference.resolved, False)
             mention = f'***"{message.reference.resolved.author.display_name}"***'
             if tfee is not None:
                 mention = f"***<@{tfee}>***"
