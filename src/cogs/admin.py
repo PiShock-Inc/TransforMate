@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 import utils
-from config import WEBHOOK_NAME, MAX_REGEN_USERS
+from config import MAX_REGEN_USERS
 
 
 class Admin(commands.Cog):

@@ -59,7 +59,6 @@ install the requirements, and create a `.env` file with the following contents:
 ```
 # General bot configuration
 BOT_TOKEN= # Your Discord Bot token
-WEBHOOK_NAME= # The name of the Discord Webhooks your bot will create
 BLOCKED_USERS="[user_id1, user_id2, ...]" # List of globally blocked users
 USER_REPORTS_CHANNEL_ID= # Discord Channel ID to send user reports to
 CACHE_PATH="cache" # Path for cache files, especifically TMUD data and server settings
@@ -71,7 +70,7 @@ automatically.
 
 You should also install all the requirements from `requirements.txt` and create the
 cache directory and a `people` directory inside it, with, for example,
-`mkdir cache/people`.
+`mkdir -p cache/people`.
 
 For more information or help, don't hesitate to ask in our Discord server!
 

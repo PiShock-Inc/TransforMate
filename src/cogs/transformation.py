@@ -238,7 +238,7 @@ class Transformation(commands.Cog):
 
         transformed_data = utils.load_transformed(ctx.guild)
         if transformed_data['logs'][2]:
-            embed = utils.get_embed_base(titls -l /dev/ttyACM0le="Transformed User", color=discord.Color.green())
+            embed = utils.get_embed_base(title="Transformed User", color=discord.Color.green())
             embed.add_field(name="User", value=user.mention)
             embed.add_field(name="Transformed By", value=ctx.author.mention)
             embed.add_field(name="Into", value="Their normal self")

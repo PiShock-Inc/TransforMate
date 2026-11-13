@@ -54,7 +54,6 @@ async def on_raw_member_remove(payload: discord.RawMemberRemoveEvent) -> None:
 
 @bot.event
 async def on_message(message: discord.Message) -> None:
-    # Check if the message is sent by the bot, we don't want an endless loop that ends on an error/crash, do we?
     if message.author == bot.user:
         return
 
@@ -142,13 +141,13 @@ async def on_message(message: discord.Message) -> None:
     is_thread = message.channel.type in [discord.ChannelType.private_thread, discord.ChannelType.public_thread]
     channel = message.channel.parent if is_thread else message.channel
 
-    webhook = await utils.get_webhook_by_name(channel, WEBHOOK_NAME)
+    webhook = await utils.get_webhook_by_name(channel, name, message.author.id)
 
     content: str = ""
     if message.reference:  # Check if the message is a reply
         mention = f"***{message.reference.resolved.author.mention}***"
         if message.reference.resolved.webhook_id and not message.reference.resolved.author == bot.user:
-            tfee, _ = utils.check_message(message.reference.resolved)
+            tfee, _ = await utils.check_message(message.reference.resolved)
             mention = f'***"{message.reference.resolved.author.display_name}"***'
             if tfee is not None:
                 mention = f"***<@{tfee}>***"
@@ -217,7 +216,7 @@ async def on_reaction_add(reaction: discord.Reaction, user: discord.User) -> Non
             str(reaction.emoji) not in ["❓", "❔", "✏️", "📝", "❌", "🔒", "🔓", "🔐"]:
         return
 
-    tfee, data = utils.check_message(reaction.message)
+    tfee, data = await utils.check_message(reaction.message)
     if tfee is None:
         return
     await reaction.remove(user) # Remove the reaction from the message
@@ -235,14 +234,13 @@ async def on_reaction_add(reaction: discord.Reaction, user: discord.User) -> Non
         await user.send(f"You have requested to edit the following message:\n"
                         f"\"{reaction.message.content}\"\n"
                         f"Please provide the edited message you want to send.")
-        response = await bot.wait_for('message', check=lambda m: m.author == user and
-                                                                       m.channel.type == discord.ChannelType.private)
+        response = await bot.wait_for('message', check=lambda m: m.author == user and m.channel.type == discord.ChannelType.private)
         # Send the message through the webhook
         is_thread = reaction.message.channel.type in [discord.ChannelType.private_thread,
                                                       discord.ChannelType.public_thread]
         channel = reaction.message.channel.parent if is_thread else reaction.message.channel
 
-        webhook = await utils.get_webhook_by_name(channel, WEBHOOK_NAME)
+        webhook = await utils.get_webhook_by_name(channel, reaction.message.author.name, m.author.id)
 
         attachments = []
         for attachment in response.attachments:

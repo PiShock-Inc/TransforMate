@@ -14,7 +14,7 @@ def parse_list(string: str | None) -> list[int]:
 if not load_dotenv():
     raise Exception("Either your .env file is empty, or you don't even have a .env file! Aborting")
 
-required_variables = ["BOT_TOKEN", "WEBHOOK_NAME", "BLOCKED_USERS", "USER_REPORTS_CHANNEL_ID", "CACHE_PATH"]
+required_variables = ["BOT_TOKEN", "BLOCKED_USERS", "USER_REPORTS_CHANNEL_ID", "CACHE_PATH"]
 for var in required_variables:
     if os.getenv(var) is None:
         raise Exception(f"{var} hasn't been provided! Check your .env! Aborting")
@@ -23,7 +23,6 @@ for var in required_variables:
 
 # General bot configuration
 BOT_TOKEN: str = os.getenv("BOT_TOKEN")  # Token for the bot
-WEBHOOK_NAME: str = os.getenv("WEBHOOK_NAME")  # Name to use for the webhooks
 BLOCKED_USERS: list[int] = parse_list(os.getenv("BLOCKED_USERS"))  # Users that are blocked from using the bot
 USER_REPORTS_CHANNEL_ID: int = int(os.getenv("USER_REPORTS_CHANNEL_ID"))  # Channel to use for the /report command
 CACHE_PATH: str = os.getenv("CACHE_PATH")  # What's the path to the cache folder? (In relationship to the utils.py file)

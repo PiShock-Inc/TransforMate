@@ -55,8 +55,7 @@ def load_tf(user: discord.User | discord.Member | int, guild: discord.Guild | in
 
     :return: A TMUD-compliant dictionary containing the user's TMUD data.
     """
-    return load_file(f'{CACHE_PATH}/people/{str(user if type(user) is int else user.id)}.json',
-                     guild if type(guild) in [int, NoneType] else guild.id)
+    return load_file(f'{CACHE_PATH}/people/{str(user if type(user) is int else user.id)}.json', guild if type(guild) in [int, NoneType] else guild.id)
 
 
 def write_tf(user: discord.User | discord.Member | int,
@@ -650,24 +649,26 @@ def write_file(filename: str, data: dict) -> None:
 
 
 # MISCELLANEOUS UTILS
-async def get_webhook_by_name(channel: discord.TextChannel, name: str) -> discord.Webhook:
+async def get_webhook_by_name(channel: discord.TextChannel, name: str, user_id: int) -> discord.Webhook:
     """
     Helper to get (or create, if it doesn't exist) a webhook by name from a list of webhooks.
 
     :param channel: The Discord channel to get the webhook from.
-    :param name: The name of the webhook to get.
+    :param name: The name of the transformation.
+    :param user_id: The ID of the user that is transformed.
 
     :return: The Discord webhook with the specified name.
     """
-    webhook = next((wh for wh in await channel.webhooks() if wh.name == name), None)
+    wh_name = f"{user_id}_{name[:3]}{name[-3:]}"
+    webhook = next((wh for wh in await channel.webhooks() if wh.name == wh_name), None)
     if webhook is None:
         try:
-            webhook = await channel.create_webhook(name=name)
+            webhook = await channel.create_webhook(name=wh_name)
         except discord.errors.HTTPException: # Webhook limit reached
             webhooks = await channel.webhooks()
             if len(webhooks) == 0:
                 raise
-            webhook = webhooks[0]
+            webhook = await webhooks[0].edit(name=wh_name, reason="Webhook limit reached, repurposing")
     return webhook
 
 
@@ -687,17 +688,25 @@ def get_embed_base(title: str,
     )
 
 
-def check_message(message: discord.Message) -> tuple[int | None, dict | None]:
-    transformed_data = load_transformed(message.guild)['transformed_users']
-    # Currently, we have to check over ALL transformed users
-    for tfee in transformed_data:
-        if transformed_data[tfee] in [[], None]:
-            continue
-        data = load_tf(int(tfee), message.guild)
-        if 'into' in data and data['into'] == message.author.display_name:
-            # TODO: Make it so that this function returns all currently tfed users with this tf name
-            return int(tfee), data
-    return None, None
+async def check_message(message: discord.Message) -> tuple[int | None, dict | None]:
+    """
+    Gets the tfed user and the data of said user from a message sent by the bot, if possible.
+
+    :param message: The message to extract the data from.
+
+    :return: A tuple containing, in this order, the user ID, and the TMUD data of the TF, or both parameters set to None if the fetching failed.
+    """
+    wh_id = message.webhook_id
+    if wh_id is None:
+        return None, None
+    webhook = [w for w in await message.channel.webhooks() if w.id == wh_id]
+    if len(webhook) == 0:
+        return None, None
+    wh_name = webhook[0].name
+    if wh_name is None or wh_name.strip() == "":
+        return None, None
+    user_id = int(wh_name.strip().split("_")[0])
+    return user_id, load_tf(user_id, message.guild)
 
 # TSF Utilities
 # See https://dorythecat.github.io/TransforMate/commands/transformation/export_tf/#transformation-string-format
