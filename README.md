@@ -17,11 +17,11 @@ look no further! With TransforMate, this task is made much simpler!
 - Straightforward to use and understand
 - Well-documented, open-source, and in active development and support
 - Friendly, helpful, and active community
-- Free to use
+- Free to use, forever
 - No ads, no tracking, no selling of data
 
 ### For server staff:
-- Little to none setup and configuration
+- Little to no setup and configuration
 - Easily configurable for all kinds of servers
 - Block users from using the bot, on a per-user or per-server basis
 - Global ban system that helps you keep your server safe from known bad actors
@@ -53,32 +53,32 @@ By adding TransforMate to your server, you agree to our
 [Terms of Service](http://docs.transformate.live/legal/tos/), and to our
 [Privacy Policy](http://docs.transformate.live/legal/privacy_policy/).
 
-## Hosting TransforMate
+## Hosting your own TransforMate
 To host your own TransforMate instance, you'll just need to clone this repo,
 install the requirements, and create a `.env` file with the following contents:
 ```
 # General bot configuration
-BOT_TOKEN= # Your Discord Bot token
-BLOCKED_USERS="[user_id1, user_id2, ...]" # List of globally blocked users
-USER_REPORTS_CHANNEL_ID= # Discord Channel ID to send user reports to
-CACHE_PATH="cache" # Path for cache files, especifically TMUD data and server settings
-MAX_REGEN_USERS=100 # Maximum number of users in a server allowed for /regen_server_tfs
+# Your Discord Bot token (REQUIRED)
+BOT_TOKEN=
+
+# List of globally blocked users (Default: [])
+BLOCKED_USERS=[user_id1, user_id2, ...]
+
+# Discord Channel ID to send user reports to (REQUIRED)
+USER_REPORTS_CHANNEL_ID=
+
+# Path for cache files, especifically TMUD data and server settings (Default: cache)
+CACHE_PATH=cache
+
+# Maximum number of users in a server allowed for /regen_server_tfs (Default: 100)
+MAX_REGEN_USERS=100
 ```
 
-If all of these contents aren't present, an error will be thrown by the program
-automatically.
+Make sure at the very least you provide a `BOT_TOKEN` and a `USER_REPORTS_CHANNEL_ID`. The bot will not work without both of these.
 
-You should also install all the requirements from `requirements.txt` and create the
-cache directory and a `people` directory inside it, with, for example,
-`mkdir -p cache/people`.
+While you can definitely host this as-is, a docker image is provided for ease of setup and longevity. Further instructions incoming.
 
 For more information or help, don't hesitate to ask in our Discord server!
-
-### Secret Key
-The Secret Key is required to encode user passwords using passlib. You can leave
-this field empty if you aren't going to use the API features. Otherwise, to
-populate it, run the command `openssl rand -hex 32` in your terminal to get a
-randomly generated secret key. Do not share this key with anyone.
 
 ## Collaborating with the project
 If you've had a cool idea, found a bug, or wanted to add some of your own code, 
@@ -89,6 +89,3 @@ our Discord server, where we have channels and forums specifically for this stuf
 [Discord Server](https://discord.gg/uGjWk2SRf6)
 
 Inspired by the awesome BPTBot, made by Leroco.
-
-# Demo video for some reason
-https://github.com/user-attachments/assets/0d5774f6-585f-42aa-9784-495798326119
