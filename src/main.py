@@ -59,6 +59,10 @@ async def on_message(message: discord.Message) -> None:
 
     if not message.guild:  # DMs
         if "report" in message.content.lower():
+            if USER_REPORTS_CHANNEL_ID < 0:
+                await message.author.send("The global reporting system is disabled on this instance of the bot.\n\n"
+                                          "Please contact the instance's owner directly.")
+                return
             await message.author.send("Uh, oh! Do you want to report someone? If so, please provide the user ID, which "
                                       "you can get by right-clicking on their name and selecting \"Copy ID\".")
             user_id = await bot.wait_for('message', check=lambda m: m.author == message.author)
@@ -355,8 +359,12 @@ bot.load_extension('.block', package='cogs')  # "Block" Commands
 async def report(ctx: discord.ApplicationContext,
                  user: discord.User,
                  reason: discord.SlashCommandOptionType.string) -> None:
+    if USER_REPORTS_CHANNEL_ID < 0:
+        await ctx.respond("The global reporting system is disabled on this instance of the bot.\n\n"
+                          "Please contact the instance's owner directly.", ephemeral=True)
+        return
     if reason.strip() == "":
-        await ctx.respond("Please provide a valid reason for the report!")
+        await ctx.respond("Please provide a valid reason for the report!", ephemeral=True)
         return
     await ctx.respond(
         "Are you sure you want to report this user? This will send a message to the server owner, and to "

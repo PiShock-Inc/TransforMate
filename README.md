@@ -64,8 +64,8 @@ BOT_TOKEN=
 # List of globally blocked users (Default: [])
 BLOCKED_USERS=[user_id1, user_id2, ...]
 
-# Discord Channel ID to send user reports to (REQUIRED)
-USER_REPORTS_CHANNEL_ID=
+# Discord Channel ID to send user reports to (Default: -1)
+USER_REPORTS_CHANNEL_ID=-1
 
 # Path for cache files, especifically TMUD data and server settings (Default: cache)
 CACHE_PATH=cache
@@ -74,7 +74,9 @@ CACHE_PATH=cache
 MAX_REGEN_USERS=100
 ```
 
-Make sure at the very least you provide a `BOT_TOKEN` and a `USER_REPORTS_CHANNEL_ID`. The bot will not work without both of these.
+Make sure at the very least you provide a `BOT_TOKEN`. The bot will not work without it, since it will not be able to connect to Discord.
+
+The `USER_REPORTS_CHANNEL_ID`, when set to a negative integer, will disable global reporting from being used on the bot.
 
 While you can definitely host this as-is, a docker image is provided for ease of setup and longevity. Further instructions incoming.
 
