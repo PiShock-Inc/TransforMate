@@ -347,12 +347,115 @@ async def on_reaction_add(reaction: discord.Reaction, user: discord.User) -> Non
 
 
 bot.load_extension('.transformation', package='cogs')  # Transformation (base) Commands
-bot.load_extension('.set', package='cogs')  # "Set" Commands
 bot.load_extension('.clear', package='cogs')  # "Clear" Commands
 bot.load_extension('.get', package='cogs')  # "Get" Commands
 bot.load_extension('.admin', package='cogs')  # "Admin" Commands
 bot.load_extension('.block', package='cogs')  # "Block" Commands
 
+
+attributes: list[str] = ["prefix", "suffix", "big", "small", "hush", "backwards", "eternal", "censor", "sprinkle", "muffle", "alt_muffle", "stutter", "bio", "nickname", "image"]
+
+@bot.slash_command(description="Set various attributes of a transformation. Fields that aren't used for a specific attribute will be ignored.")
+async def set(ctx: discord.ApplicationContext,
+              attribute: discord.Option(str,
+                                        description="Attribute to set",
+                                        choices=attributes),
+              user: discord.Option(discord.User,
+                                   description="User to set attribute for") = None,
+              value: discord.Option(str,
+                                    description="Value to set for the modifier, if supported") = None,
+              replacement: discord.Option(str,
+                                          description="Replacement for the censor value") = None,
+              chance: discord.Option(float,
+                                     description="Chance to set for the modifier, if supported",
+                                     min_value=0,
+                                     max_value=100) = 30,
+              whitespace: discord.Option(bool,
+                                         description="Put a whitespace after prefixes or before suffixes (defaults True)") = True) -> None:
+    valid, data, user = await utils.extract_tf_data(ctx, user)
+    if not valid:
+        return
+    match attribute:
+        case "prefix":
+            utils.write_tf(user, ctx.guild, prefix=value + (" " * whitespace), chance=chance)
+            await ctx.respond(f"Prefix for {user.mention} set to \"{value}\"!")
+        case "suffix":
+            utils.write_tf(user, ctx.guild, suffix=(" " * whitespace) + value, chance=chance)
+            await ctx.respond(f"Suffix for {user.mention} set to \"{value}\"!")
+        case "big":
+            if data['big']:
+                await ctx.respond(f"{user.mention} is already speaking big! Use /clear to disable this!")
+                return
+            utils.write_tf(user, ctx.guild, big=True)
+            await ctx.respond(f"{user.mention} will now speak in big text!")
+        case "small":
+            if data['small']:
+                await ctx.respond(f"{user.mention} is already speaking small! Use /clear to disable this!")
+                return
+            utils.write_tf(user, ctx.guild, small=True)
+            await ctx.respond(f"{user.mention} will now speak in small text!")
+        case "hush":
+            if data['hush']:
+                await ctx.respond(f"{user.mention} is already hushed! Use /clear to disable this!")
+                return
+            utils.write_tf(user, ctx.guild, hush=True)
+            await ctx.respond(f"{user.mention} will now hush!")
+        case "backwards":
+            if data['backwards']:
+                await ctx.respond(f"{user.mention} is already speaking backwards! Use /clear to disable this!")
+                return
+            utils.write_tf(user, ctx.guild, backwards=True)
+            await ctx.respond(f"{user.mention} will now speak backwards!")
+        case "eternal":
+            if data['claim'] == 0:
+                await ctx.respond(f"{user.mention} isn't owned by anyone! Claim them to eternally transform them!")
+                return
+            if data['claim'] != ctx.user.id:
+                await ctx.respond(f"{user.mention} is owned by <@!{data['claim']}>, and not by you! You can't do that!")
+                return
+            if data['eternal']:
+                await ctx.respond(f"{user.mention} is already eternally transformed! Use /clear to disable this!")
+                return
+            utils.write_tf(user, ctx.guild, eternal=True)
+            await ctx.respond(f"{user.mention} is now eternally transformed!")
+
+            transformed_data = utils.load_transformed(ctx.guild)
+            if transformed_data['logs'][3]:
+                embed = utils.get_embed_base(title="User Eternally Transformed", color=discord.Color.gold())
+                embed.add_field(name="Owner", value=user.mention)
+                embed.add_field(name="Pet", value=ctx.user.mention)
+                embed.add_field(name="Channel", value=ctx.channel.mention)
+                await ctx.guild.get_channel(transformed_data['logs'][3]).send(embed=embed)
+        case "censor":
+            utils.write_tf(user, ctx.guild, censor=value, censor_replacement=replacement)
+            await ctx.respond(f"{user.mention} will now have the word \"{value}\" censored to \"{replacement}\"!")
+        case "sprinkle":
+            utils.write_tf(user, ctx.guild, sprinkle=value, chance=chance)
+            await ctx.respond(f"{user.mention} will now have the word \"{value}\" sprinkled throughout their messages!")
+        case "muffle":
+            utils.write_tf(user, ctx.guild, muffle=value, chance=chance)
+            await ctx.respond(f"{user.mention} will now have their messages muffled with \"{value}\"!")
+        case "alt_muffle":
+            utils.write_tf(user, ctx.guild, alt_muffle=value, chance=chance)
+            await ctx.respond(f"{user.mention} will now have their messages muffled with \"{value}\"!")
+        case "stutter":
+            utils. write_tf(user, ctx.guild, stutter=chance)
+            await ctx.respond(f"{user.mention} will now stutter when talking!")
+        case "bio":
+            utils.write_tf(user, ctx.guild, bio=value)
+            await ctx.respond(f"{user.mention}'s biography has been set!")
+        case "nickname":
+            try:
+                await user.edit(nick=data['into'])
+                await ctx.respond(f"{user.mention}'s nickname has been set to their transformation name!")
+            except Exception:
+                await ctx.respond(f"Could not change {user.mention}'s nickname! The bot might not have the required permissions!", ephemeral=True)
+        case "image":
+            value = utils.check_url(value)
+            if value == "":
+                await ctx.respond("Invalid image URL! Please provide a valid image URL!")
+                return
+            utils.write_tf(user, ctx.guild, image_url=value)
 
 # Misc commands
 @bot.slash_command(description="Report a user for misuse of this bot")
