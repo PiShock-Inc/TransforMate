@@ -1,4 +1,8 @@
 ## Staging (Transformate Alpha)
+- Fixed [#106](https://github.com/PiShock-Inc/TransforMate/issues/106).
+- Implemented [#105](https://github.com/PiShock-Inc/TransforMate/issues/105).
+- Fixed [#104](https://github.com/PiShock-Inc/TransforMate/issues/104).
+- Implemented [#100](https://github.com/PiShock-Inc/TransforMate/issues/100).
 - Implemented [#99](https://github.com/PiShock-Inc/TransforMate/issues/99).
 - Implemented [#97](https://github.com/PiShock-Inc/TransforMate/issues/97).
 - Fixed[#84](https://github.com/PiShock-Inc/TransforMate/issues/84).
