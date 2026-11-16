@@ -347,7 +347,6 @@ async def on_reaction_add(reaction: discord.Reaction, user: discord.User) -> Non
 
 
 bot.load_extension('.transformation', package='cogs')  # Transformation (base) Commands
-bot.load_extension('.clear', package='cogs')  # "Clear" Commands
 bot.load_extension('.get', package='cogs')  # "Get" Commands
 bot.load_extension('.admin', package='cogs')  # "Admin" Commands
 bot.load_extension('.block', package='cogs')  # "Block" Commands
@@ -355,7 +354,7 @@ bot.load_extension('.block', package='cogs')  # "Block" Commands
 
 attributes: list[str] = ["prefix", "suffix", "big", "small", "hush", "backwards", "eternal", "censor", "sprinkle", "muffle", "alt_muffle", "stutter", "bio", "nickname", "image"]
 
-@bot.slash_command(description="Set various attributes of a transformation. Fields that aren't used for a specific attribute will be ignored.")
+@bot.slash_command(description="Set the attributes of a transformation. Fields that aren't used for an attribute will be ignored.")
 async def set(ctx: discord.ApplicationContext,
               attribute: discord.Option(str,
                                         description="Attribute to set",
@@ -411,7 +410,7 @@ async def set(ctx: discord.ApplicationContext,
                 await ctx.respond(f"{user.mention} isn't owned by anyone! Claim them to eternally transform them!")
                 return
             if data['claim'] != ctx.user.id:
-                await ctx.respond(f"{user.mention} is owned by <@!{data['claim']}>, and not by you! You can't do that!")
+                await ctx.respond(f"{user.mention} is owned by <@!{data['claim']}>, and not by you! You are not allowed to do that!")
                 return
             if data['eternal']:
                 await ctx.respond(f"{user.mention} is already eternally transformed! Use /clear to disable this!")
@@ -456,6 +455,122 @@ async def set(ctx: discord.ApplicationContext,
                 await ctx.respond("Invalid image URL! Please provide a valid image URL!")
                 return
             utils.write_tf(user, ctx.guild, image_url=value)
+            await ctx.respond(f"Set image for {user.mention}!")
+
+@bot.slash_command(description="Clear the attributes of a transformation. Fields that aren't used for an attribute will be ignored.")
+async def clear(ctx: discord.ApplicationContext,
+              attribute: discord.Option(str,
+                                        description="Attribute to clear (\"all\" clears everything except a user's image)",
+                                        choices=attributes + ['all']),
+              user: discord.Option(discord.User,
+                                   description="User to clear attribute for") = None,
+              value: discord.Option(str,
+                                    description="Value of the modifier to clear, if supported (defaults to all)") = "") -> None:
+    valid, data, user = await utils.extract_tf_data(ctx, user)
+    if not valid:
+        return
+    if attribute != "all" and data[attribute] in [{}, False, "", None]:
+        await ctx.respond(f"{user.mention} doesn't have that attribute set at all!")
+        return
+    match attribute:
+        case "all":
+            utils.write_tf(user, ctx.guild, claim_user=None, eternal=FAlse, prefix="", suffix="", big=False, small=False, hush=False, backwards=False, censor="", sprinkle="", muffle="", alt_muffle="", bio="")
+            await ctx.respond(f"All settings for {user.mention} have been cleared!")
+        case "prefix" | "suffix":
+            if value != "":
+                if value not in data[attribute]:
+                    if value + " " not in data[attribute]:
+                        await ctx.respond(f"{user.mention} does not appear to have the {attribute} \"{value}\" currently active!")
+                        return
+                    value += " "
+                value = f"$/-{value}"
+            utils.write_tf(user, ctx.guild, prefix=(value if attribute == "prefix" else None), suffix=(value if attribute == "suffix" else None))
+            await ctx.respond(f"{attribute.title()} for {user.mention} has been cleared!")
+        case "big" | "small":
+            if not data[attribute]:
+                await ctx.respond(f"{user.mention} does not appear to have {attribute} text currently active!")
+            utils.write_tf(user, ctx.guild, big=(False if attribute == "big" else None), small=(False if attribute == "small" else None))
+            await ctx.respond(f"{user.mention} will no longer speak in {attribute} text!")
+        case "hush":
+            if not data['hush']:
+                await ctx.respond(f"{user.mention} doesn't appear to be hushing right now!")
+                return
+            utils.write_tf(user, ctx.guild, hush=False)
+            await ctx.respond(f"{user.mention} will no longer hush!")
+        case "backwards":
+            if not data['backwards']:
+                await ctx.respond(f"{user.mention} does not appear to have backwards text currently active!")
+                return
+            utils.write_tf(user, ctx.guild, backwards=False)
+            await ctx.respond(f"{user.mention} will no longer speak backwards!")
+        case "censor":
+            if data['censor'] == {}:
+                await ctx.respond(f"{user.mention} does not appear to have any censors currently active!")
+                return
+            if value != "":
+                if value not in data['censor']:
+                    await ctx.respond(f"{user.mention} does not appear to currently have the word \"{value}\" censored!")
+                    return
+                value = f"$/-{value}"
+            utils.write_tf(user, ctx.guild, censor=value)
+            await ctx.respond(f"Censor for {user.mention} has been cleared!")
+        case "sprinkle":
+            if data['sprinkle'] == {}:
+                await ctx.respond(f"{user.mention} does not appear to have any sprinkles currently active!")
+                return
+            if value != "":
+                if value not in data['sprinkle']:
+                    await ctx.respond(f"{user.mention} does not appear to currently have the word \"{value}\" sprinkled!")
+                    return
+                value = f"$/-{value}"
+            utils.write_tf(user, ctx.guild, sprinkle=value)
+            await ctx.respond(f"Sprinkle for {user.mention} has been cleared!")
+        case "muffle" | "alt_muffle":
+            if data[attribute] == {}:
+                await ctx.respond(f"{user.mention} does not appear to have any muffles currently active!")
+                return
+            if value != "":
+                if value not in data[attribute]:
+                    await ctx.respond(f"{user.mention} does not appear to currently have the word \"{muffle}\" muffled!")
+                    return
+                value = f"$/-{value}"
+            utils.write_tf(user, ctx.guild, muffle=(value if attribute == 'muffle' else None), alt_muffle=(value if attribute == 'alt_muffle' else None))
+            await ctx.respond(f"Muffle for {user.mention} has been cleared!")
+        case "eternal":
+            if data['claim'] == 0:
+                await ctx.respond(f"{user.mention} isn't owned by anyone! They should not be eternally transformed!")
+                return
+            if data['claim'] != ctx.user.id:
+                await ctx.respond(f"{user.mention} is owned by <@!{data['claim']}>, and not by you! You are not allowed to do that!")
+                return
+            if not data['eternal']:
+                await ctx.respond(f"{user.mention} does not appear to currently be eternally transformed!")
+                return
+            utils.write_tf(user, ctx.guild, eternal=False)
+            await ctx.respond(f"{user.mention} is no longer eternally transformed!")
+
+            transformed_data = utils.load_transformed(ctx.guild)
+            if transformed_data['logs'][3]:
+                embed = utils.get_embed_base(title="User No Longer Eternally Transformed", color=discord.Color.gold())
+                embed.add_field(name="Owner", value=user.mention)
+                embed.add_field(name="Pet", value=ctx.user.mention)
+                embed.add_field(name="Channel", value=ctx.channel.mention)
+                await ctx.guild.get_channel(transformed_data['logs'][3]).send(embed=embed)
+        case "bio":
+            if data['bio'] in ["", None]:
+                await ctx.respond(f"{user.mention} does not appear to currently have a biography set!")
+                return
+            utils.write_tf(user, ctx.guild, bio="")
+            await ctx.respond(f"Biography for {user.mention} has been cleared!")
+        case "nickname":
+            try:
+                await user.edit(nick=user.global_name)
+                await ctx.respond(f"{user.mention}'s nickname has been set to their default nickname!")
+            except Exception:
+                await ctx.respond(f"Could not change {user.mention}'s nickname! The bot might not have the required permissions!", ephemeral=True)
+        case "image":
+            utils.write_tf(user, ctx.guild, image_url=user.avatar)
+            await ctx.respond(f"Set image for {user.mention} to their default profile picture!")
 
 # Misc commands
 @bot.slash_command(description="Report a user for misuse of this bot")
