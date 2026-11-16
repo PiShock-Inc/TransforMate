@@ -28,7 +28,7 @@ async def transform_function(ctx: discord.ApplicationContext,
     if image_url:
         image_url = utils.check_url(image_url)
         if image_url == "":
-            await ctx.respond("Invalid Image URL! Please provide a valid image URL!")
+            await ctx.respond("Invalid image URL! Please provide a valid image URL!")
             return False
 
     if copy is not None:
