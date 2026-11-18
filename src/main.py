@@ -569,7 +569,7 @@ async def clear(ctx: discord.ApplicationContext,
             except Exception:
                 await ctx.respond(f"Could not change {user.mention}'s nickname! The bot might not have the required permissions!", ephemeral=True)
         case "image":
-            utils.write_tf(user, ctx.guild, image_url=user.avatar)
+            utils.write_tf(user, ctx.guild, image_url=user.avatar.url)
             await ctx.respond(f"Set image for {user.mention} to their default profile picture!")
 
 # Misc commands
